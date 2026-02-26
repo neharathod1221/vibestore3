@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Success - Vibestore</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="text-align: center; padding: 50px 20px; background: #f4f4f4; font-family: sans-serif;">
+
+    <div style="background: white; max-width: 600px; margin: auto; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        
+        <div style="font-size: 60px; margin-bottom: 20px;">✅</div>
+        
+        <h1 style="color: #28a745; margin-bottom: 10px;">Order Placed Successfully!</h1>
+        <p style="color: #666;">Thank you for shopping with <strong>Vibestore</strong>. Your style is on the way!</p>
+        
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+        
+        <div id="order-info" style="text-align: left; background: #f9f9f9; padding: 20px; border-radius: 8px; line-height: 1.6;">
+            </div>
+        
+        <br>
+        <button onclick="goHome()" style="padding: 15px 30px; background: #333; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%;">
+            Continue Shopping
+        </button>
+    </div>
+
+    <script>
+        const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
+        
+        if(lastOrder) {
+            const orderId = "VIBE-" + Math.floor(100000 + Math.random() * 900000);
+
+            const itemNames = lastOrder.items.map(item => item.name).join(", ");
+
+            let totalBill = 0;
+            lastOrder.items.forEach(item => {
+                totalBill += (item.price * (item.quantity || 1));
+            });
+            const payIcon = lastOrder.paymentType === "Online" ? "💳" : "💵";
+
+            document.getElementById('order-info').innerHTML = `
+                <h3 style="margin-top:0; color:#333; border-bottom: 1px solid #ddd; padding-bottom:10px;">Order Summary</h3>
+                <p><strong>Order Number:</strong> <span style="color:#28a745; font-weight:bold;">#${orderId}</span></p>
+                <p><strong>Customer:</strong> ${lastOrder.customerName}</p>
+                <p><strong>Shipping Address:</strong> ${lastOrder.deliveryAddress}</p>
+                
+                <div style="background: #fff; padding: 10px; border-radius: 5px; border: 1px solid #eee; margin: 15px 0;">
+                    <p style="margin:0;"><strong>Items:</strong> <span style="color:#555; font-size:0.9rem;">${itemNames}</span></p>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc;">
+                    <div>
+                        <strong>Payment Method:</strong><br>
+                        <span>${payIcon} ${lastOrder.paymentType || 'Not Specified'}</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong style="font-size: 1.2rem; color: #000;">Total Paid: ₹${totalBill.toFixed(0)}</strong>
+                    </div>
+                </div>
+            `;
+        } else {
+            document.body.innerHTML = "<div style='margin-top:100px;'><h1>No order found!</h1><br><a href='3-index.html' style='color:#333;'>Go back to shop</a></div>";
+        }
+
+        function goHome() {
+            localStorage.removeItem('myCart'); 
+            window.location.href = "3-index.html";
+        }
+    </script>
+</body>
+</html>

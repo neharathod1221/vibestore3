@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login & Signup | Vibestore</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container { max-width: 400px; margin: 80px auto; padding: 30px; background: rgba(255,255,255,0.9); border-radius: 15px; text-align: center; font-family: sans-serif; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 97%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .error { color: red; font-size: 12px; height: 15px; margin: 0; text-align: left; padding-left: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div id="signup-form">
+            <h2>Create Account</h2>
+            <input type="text" id="reg-name" placeholder="Full Name">
+            <p id="name-error" class="error"></p>
+            <input type="email" id="reg-email" placeholder="Email">
+            <p id="email-error" class="error"></p>
+            <input type="password" id="reg-pass" placeholder="Password">
+            <p id="pass-error" class="error"></p>
+            <button type="button" onclick="registerUser()">Sign Up</button>
+            <p>Already have an account? <a href="#" onclick="toggleForm()">Login here</a></p>
+        </div>
+
+        <div id="login-form" style="display: none;">
+            <h2>Login</h2>
+            <input type="email" id="login-email" placeholder="Email">
+            <input type="password" id="login-pass" placeholder="Password">
+            <p id="login-error" class="error"></p>
+            <button type="button" onclick="loginUser()">Login</button>
+            <p>New user? <a href="#" onclick="toggleForm()">Register here</a></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            const signup = document.getElementById('signup-form');
+            const login = document.getElementById('login-form');
+            if (signup.style.display === "none") {
+                signup.style.display = "block";
+                login.style.display = "none";
+            } else {
+                signup.style.display = "none";
+                login.style.display = "block";
+            }
+        }
+    </script>
+    <script src="2-Auth.js"></script>
+</body>
+</html>

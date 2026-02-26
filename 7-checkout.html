@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout | MyStore</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">MyStore - Checkout</div>
+        <a href="5-cart.html" style="color: white;">Back to Cart</a>
+    </nav>
+
+    <div class="container" style="max-width: 600px; margin: 50px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h2>Shipping Details</h2>
+        <form id="checkout-form">
+            <div style="margin-bottom: 15px;">
+                <label>Full Name</label>
+                <input type="text" id="cust-name" placeholder="Enter your name" required style="width: 100%; padding: 10px; margin-top: 5px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>Phone Number</label>
+                <input type="tel" id="cust-phone" placeholder="Enter 10 digit number" required style="width: 100%; padding: 10px; margin-top: 5px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>Full Address</label>
+                <textarea id="cust-address" rows="3" placeholder="Enter your delivery address" required style="width: 100%; padding: 10px; margin-top: 5px;"></textarea>
+            </div>
+            <div style="margin: 20px 0;">
+        <h4>Payment Method:</h4>
+        <input type="radio" name="payment" value="COD" id="cod"> <label for="cod">Cash on Delivery</label> <br>
+        <input type="radio" name="payment" value="Online" id="online"> <label for="online">Online Payment (Card)</label>
+    </div>
+
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <h4>Order Summary</h4>
+                <p>Total Items: <span id="summary-qty">0</span></p>
+                <p><strong>Grand Total: ₹<span id="summary-total">0</span></strong></p>
+            </div>
+
+            <button type="submit" class="checkout-btn" style="width: 100%; padding: 15px; background: #28a745; color: white; border: none; font-size: 1.1rem; cursor: pointer; border-radius: 5px;">
+                Place Order (Cash on Delivery)
+            </button>
+        </form>
+    </div>
+
+    <script src="8-checkout.js"></script>
+</body>
+</html>
