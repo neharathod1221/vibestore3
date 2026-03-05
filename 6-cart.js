@@ -4,15 +4,17 @@ function updateCartBadge() {
     const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
     const cartBtn = document.getElementById('cart-btn');
-
     if (cartBtn) {
         cartBtn.innerHTML = `<i class="fa fa-shopping-cart"></i> Cart (${totalItems})`;
     }
+
+    const cartPageCount = document.getElementById('cart-count');
+    if (cartPageCount) {
+        cartPageCount.innerText = totalItems;
+    }
 }
 
-
 setInterval(updateCartBadge, 500);
-
 
 function loadCart() {
     let cart = JSON.parse(localStorage.getItem('myCart')) || [];
@@ -60,6 +62,7 @@ function loadCart() {
     if (totalElement) totalElement.innerText = total.toFixed(0);
 }
 
+
 function changeQty(index, delta) {
     let cart = JSON.parse(localStorage.getItem('myCart')) || [];
     if (cart[index]) {
@@ -70,7 +73,8 @@ function changeQty(index, delta) {
         }
     }
     localStorage.setItem('myCart', JSON.stringify(cart));
-    loadCart(); 
+    loadCart();
+    updateCartBadge(); 
 }
 
 
@@ -78,9 +82,9 @@ function removeItem(index) {
     let cart = JSON.parse(localStorage.getItem('myCart')) || [];
     cart.splice(index, 1);
     localStorage.setItem('myCart', JSON.stringify(cart));
-    loadCart();
+    loadCart(); 
+    updateCartBadge(); 
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
     loadCart();
