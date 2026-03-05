@@ -1,4 +1,3 @@
-
 let products = [];
 
 function checkAuthStatus() {
@@ -22,6 +21,15 @@ function logoutUser() {
     window.location.href = "1-login.html"; 
 }
 
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('myCart')) || [];
+    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const cartBtn = document.getElementById('cart-btn');
+    if (cartBtn) {
+        cartBtn.innerHTML = `<i class="fa fa-shopping-cart"></i> Cart (${totalItems})`;
+    }
+}
+
 async function fetchProductsFromAPI() {
     const container = document.getElementById('product-container');
     if(container) container.innerHTML = '<h2 style="text-align:center; width:100%; margin-top:50px;">Loading Collection...</h2>';
@@ -32,11 +40,12 @@ async function fetchProductsFromAPI() {
 
         products = apiData.map(p => {
             let myCategory = "Other";
+            let apiCat = p.category.toLowerCase();
+            if (apiCat === "women's clothing") myCategory = "Women Wear";
+            else if (apiCat === "men's clothing") myCategory = "Men Wear";
+            else if (apiCat === "jewelery") myCategory = "Jewellery"; 
+            else if (apiCat === "electronics") myCategory = "Electronics"; 
             
-            if (p.category === "men's clothing") myCategory = "Men Wear";
-            if (p.category === "women's clothing") myCategory = "Women Wear";
-            if (p.category === "jewelery") myCategory = "Jewellery"; 
-            if (p.category === "electronics") myCategory = "Electronics"; 
             return {
                 id: p.id,
                 name: p.title,
@@ -49,7 +58,6 @@ async function fetchProductsFromAPI() {
         loadProducts(products);
     } catch (error) {
         console.error("API Error:", error);
-        if(container) container.innerHTML = '<h2 style="text-align:center; color:red;">Oops! Could not load products.</h2>';
     }
 }
 
@@ -64,14 +72,14 @@ function loadProducts(data = products) {
         const filtered = data.filter(p => p.category === cat);
         if(filtered.length > 0) {
             let section = `
-                <div style="width:100%; margin-bottom:40px; clear:both; display:inline-block;">
+                <div class="product-section" style="width:100%; margin-bottom:40px; clear:both; display:inline-block;">
                     <h2 style="border-bottom:3px solid #000; padding:10px; font-family:sans-serif; text-align:left; margin-left: 20px; text-transform: uppercase;">${cat}</h2>
                     <div style="display:flex; flex-wrap:wrap; justify-content:center; gap: 20px;">
             `;
 
             filtered.forEach(p => {
                 section += `
-                    <div style="width:260px; border:1px solid #eee; padding:15px; background:#fff; text-align:center; border-radius:15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s;">
+                    <div style="width:260px; border:1px solid #eee; padding:15px; background:#fff; text-align:center; border-radius:15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
                         <div style="height:250px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                             <img src="${p.img}" alt="${p.name}" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:8px;">
                         </div>
@@ -89,12 +97,45 @@ function loadProducts(data = products) {
 
 function handleSearch() {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
-    const filteredResults = products.filter(p => 
-        p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query)
-    );
-    loadProducts(filteredResults);
-}
+    const container = document.getElementById('product-container');
+    if(!container) return;
 
+    if (query === "") {
+        loadProducts(products);
+        return;
+    }
+
+    const filteredResults = products.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        p.category.toLowerCase().includes(query)
+    );
+
+    container.innerHTML = `<h2 id="search-anchor" style="width:100%; text-align:left; margin-left:20px; text-transform:uppercase; border-bottom: 2px solid #000; padding-bottom:10px;">Results for: "${query}"</h2>`;
+    
+    let grid = `<div style="display:flex; flex-wrap:wrap; justify-content:center; gap: 20px; width:100%; padding: 20px 0;">`;
+    
+    if (filteredResults.length > 0) {
+        filteredResults.forEach(p => {
+            grid += `
+                <div style="width:260px; border:1px solid #eee; padding:15px; background:#fff; text-align:center; border-radius:15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+                    <div style="height:250px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                        <img src="${p.img}" alt="${p.name}" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:8px;">
+                    </div>
+                    <h4 style="margin:15px 0 5px 0; color:#333; height:40px; overflow:hidden; font-size:14px; line-height:1.4;">${p.name}</h4>
+                    <p style="font-weight:bold; color:#e67e22; font-size:1.2rem; margin: 10px 0;">₹${p.price.toFixed(0)}</p>
+                    <button onclick="addToCart(${p.id})" style="width:100%; padding:12px; background:#000; color:#fff; border:none; cursor:pointer; border-radius:8px; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">Add to Cart</button>
+                </div>
+            `;
+        });
+        grid += `</div>`;
+        container.innerHTML += grid;
+
+        document.getElementById('search-anchor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } else {
+        container.innerHTML += `<h3 style="text-align:center; width:100%; color:gray; margin-top:50px;">No product found! 🔍</h3>`;
+    }
+}
 function addToCart(id) {
     let cart = JSON.parse(localStorage.getItem('myCart')) || [];
     const item = products.find(p => p.id === id);
@@ -106,16 +147,24 @@ function addToCart(id) {
     } else {
         cart.push({...item, quantity: 1});
     }
+
     localStorage.setItem('myCart', JSON.stringify(cart));
+    updateCartCount();
     alert(`${item.name} added to cart!`);
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const sInput = document.getElementById('search-input');
-    if (sInput) sInput.addEventListener('input', handleSearch);
-});
 
 window.onload = () => {
     checkAuthStatus();
     fetchProductsFromAPI();
+    updateCartCount();
+    
+    const sInput = document.getElementById('search-input');
+    if (sInput) {
+        sInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+        sInput.addEventListener('input', handleSearch);
+    }
 };

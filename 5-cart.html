@@ -2,13 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Shopping Cart</title>
+    <title>My Shopping Cart | VIBESTORE</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+        .cart-item img { width: 80px; height: 80px; object-fit: contain; }
+        #cart-count {
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">VIBESTORE</div>
-        <a href="3-index.html" style="color: white; text-decoration: none;">Back to Shopping</a>
+        <div class="nav-links">
+            <a href="3-index.html" style="color: white; text-decoration: none; margin-right: 20px;">Back to Shopping</a>
+            <span style="color: white;">🛒 Cart: <span id="cart-count">0</span></span>
+        </div>
     </nav>
 
     <div class="container" style="padding: 20px 5%;">
@@ -17,10 +41,10 @@
         <div id="cart-items-list">
             </div>
 
-        <div class="cart-total-section" style="margin-top: 30px; border-top: 2px solid #ddd; padding-top: 20px;">
+        <div class="cart-total-section" style="margin-top: 30px; border-top: 2px solid #ddd; padding-top: 20px; text-align: right;">
             <h3>Total Amount: ₹<span id="grand-total">0</span></h3>
             
-            <button onclick="window.location.href='7-checkout.html'" class="btn-primary">
+            <button onclick="window.location.href='7-checkout.html'" class="btn-primary" style="padding: 15px 30px; background: #000; color: #fff; border: none; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: 10px;">
                 Buy Now / Checkout
             </button>
         </div>
